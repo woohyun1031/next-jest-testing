@@ -21,10 +21,6 @@ export const COURSE_CONVERT_OBJECTS: Record<
 
 export const ESSENTIAL_COURSE_KEYS: EssentialCourseKeys = [
   'id',
-  'title',
-  'logo_file_url',
-  'short_description',
-  'enroll_type',
-  'is_free',
-  'tags',
+  'title',  
+  'short_description',  
 ];

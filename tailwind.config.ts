@@ -50,7 +50,7 @@ const config: Config = {
         sm_card: 'calc(50% - 12px)',
       },
       height: {
-        card: '338px',
+        card: '200px',
       },
     },
   },
