@@ -21,6 +21,6 @@ export const COURSE_CONVERT_OBJECTS: Record<
 
 export const ESSENTIAL_COURSE_KEYS: EssentialCourseKeys = [
   'id',
-  'title',  
-  'short_description',  
+  'title',
+  'short_description',
 ];

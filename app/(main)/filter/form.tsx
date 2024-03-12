@@ -7,6 +7,7 @@ import { IOrgCourseListResponses } from '#types/course';
 import { CoursesContext } from '@contexts/contexts';
 import CourseCard from '@components/edu/body/CourseCard';
 import Pagination from '@components/edu/pagination/Pagination';
+import SectionWraper from '@components/edu/SectionWraper';
 
 export default function Form(props: IOrgCourseListResponses) {
   const [courses, setCourses] = React.useState(props.courses);
@@ -23,24 +24,31 @@ export default function Form(props: IOrgCourseListResponses) {
   }, [props]);
 
   return (
-    <Fragment>      
+    <Fragment>
       <Suspense>
         <FilterForm />
       </Suspense>
       <Suspense>
         <CoursesContext.Provider value={contextsValue}>
-          <BodyForm {...{ course_count: courseCount, courses }} />
-          <div
-              className={`${courseCount ? 'border-b border-solid border-gray-200' : ''}  py-3`}
+          <SectionWraper>
+            <div
+              className={`${
+                courseCount ? 'border-b border-solid border-gray-200' : ''
+              }  py-3`}
             >
               <div className="inline-block text-xs font-semibold">
                 전체 {courseCount}개
               </div>
             </div>
+          </SectionWraper>
+          <SectionWraper className="flex flex-wrap gap-4">
             {courses.map((course) => (
               <CourseCard key={course.id} {...course} />
             ))}
-          <Pagination total={courseCount} courseLength={courses.length} />
+          </SectionWraper>
+          <SectionWraper className="mt-6 flex justify-center">
+            <Pagination total={courseCount} courseLength={courses.length} />
+          </SectionWraper>
         </CoursesContext.Provider>
       </Suspense>
     </Fragment>

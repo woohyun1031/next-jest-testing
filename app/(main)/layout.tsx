@@ -11,8 +11,7 @@ export default function RootLayout({
 }: RootLayoutProps): React.ReactElement {
   return (
     <html lang="ko">
-      <head>        
-      </head>
+      <head></head>
       <body className="bg-body">
         <Providers>{children}</Providers>
       </body>

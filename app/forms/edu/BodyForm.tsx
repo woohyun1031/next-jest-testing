@@ -17,7 +17,9 @@ export default function BodyForm({
         <Fragment>
           <SectionWraper>
             <div
-              className={`${course_count ? 'border-b border-solid border-gray-200' : ''}  py-3`}
+              className={`${
+                course_count ? 'border-b border-solid border-gray-200' : ''
+              }  py-3`}
             >
               <div className="inline-block text-xs font-semibold">
                 전체 {course_count}개
