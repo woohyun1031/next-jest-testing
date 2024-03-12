@@ -9,13 +9,11 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   try {
-    const response = await api.get<IOrgCourseListResponses>('',      
-      {
-        params: {
-          ...req.query,
-        },
+    const response = await api.get<IOrgCourseListResponses>('', {
+      params: {
+        ...req.query,
       },
-    );
+    });
     const result = {
       course_count: response.data.course_count,
       courses: response.data.courses.map((course) => {

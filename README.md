@@ -14,13 +14,11 @@
 
 - **테스트**: [Jest](https://jestjs.io/)
 
-
-
 ---
 
 ## 로컬 실행
 
-해당 어플리케이션은 `Node.js v18.17` 이상을 요구하고 있습니다.  
+해당 어플리케이션은 `Node.js v18.17` 이상을 요구하고 있습니다.
 
 ```bash
 git clone https://github.com/woohyun1031/next-jest-testing.git

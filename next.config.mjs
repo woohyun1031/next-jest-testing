@@ -4,11 +4,11 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/edu',
+        destination: '/search',
         permanent: true,
       },
     ];
-  },  
+  },
 };
 
 export default nextConfig;
