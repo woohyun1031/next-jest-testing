@@ -1,6 +1,6 @@
 import { PAGINATION } from '@constants/pagination';
 import convertObjectToQueryString from '@utils/convertObjectToQueryString';
-import convertSearchParamsToCourseObject from '@utils/convertSearchParamsToCourse';
+import convertSearchParamsToCourseObject from '@utils/convertSearchParamsToCourseObject';
 
 export default async function getOrgCourseList(
   searchParams: Record<string, string | string[]>,

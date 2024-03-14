@@ -5,6 +5,9 @@
   - [hook](#hook)
     - [useOnSubmit](#useonsubmit)
     - [useDebounce](#usedebounce)
+  - [utils](#utils)
+    - [convertObjectToQueryString](#convertObjectToQueryString)
+    - [convertSearchParamsToCourseObject](#convertSearchParamsToCourseObject)
 
 # Next Jest testing
 
@@ -208,6 +211,228 @@ describe('useDebounce 기능 테스트', () => {
     isReady = hook.result.current;
     jest.advanceTimersByTime(300);
     expect(isReady()).toBe(true);
+  });
+});
+
+```
+
+## utils
+
+searchParams를 파싱할 때 사용하는 utils 함수들을 테스트하였습니다.
+
+### convertObjectToQueryString
+
+```TypeScript
+export default function convertObjectToQueryString(
+  searchParams: Record<string, string | string[]>,
+) {
+  const result = new URLSearchParams(
+    Object.entries(searchParams)
+      .reduce<string[]>((acc, [key, val]) => {
+        if (Array.isArray(val)) {
+          return [...acc, ...val.map((v) => `${key}=${v}`)];
+        }
+        return [...acc, `${key}=${val}`];
+      }, [])
+      .join('&'),
+  );
+  return result.toString();
+}
+```
+
+객체 형태의 searchParams를 받아 올바르게 query string 형태로  
+반환하는지를 중점으로 테스트를 진행하였습니다.
+
+```TypeScript
+import convertObjectToQueryString from '../convertObjectToQueryString';
+
+describe('convertObjectToQueryString', () => {
+  it('should return empty string for empty object', () => {
+    const searchParams = {};
+    const expected = '';
+    const actual = convertObjectToQueryString(searchParams);
+    expect(actual).toBe(expected);
+  });
+
+  it('should return correct query string for single key-value pair', () => {
+    const searchParams = {
+      name: 'John Doe',
+    };
+    const expected = 'name=John+Doe';
+    const actual = convertObjectToQueryString(searchParams);
+    expect(actual).toBe(expected);
+  });
+
+  it('should return correct query string for multiple key-value pairs', () => {
+    const searchParams = {
+      name: 'John Doe',
+      age: '30',
+      city: 'Seoul',
+    };
+    const expected = 'name=John+Doe&age=30&city=Seoul';
+    const actual = convertObjectToQueryString(searchParams);
+    expect(actual).toBe(expected);
+  });
+
+  it('should return correct query string for array value', () => {
+    const searchParams = {
+      tags: ['javascript', 'typescript', 'react'],
+    };
+    const expected = 'tags=javascript&tags=typescript&tags=react';
+    const actual = convertObjectToQueryString(searchParams);
+    expect(actual).toBe(expected);
+  });
+
+  it('should use URLSearchParams and toString()', () => {
+    const searchParams = {
+      name: 'John Doe',
+    };
+    const spy = jest.spyOn(URLSearchParams.prototype, 'toString');
+    convertObjectToQueryString(searchParams);
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+});
+
+```
+
+### convertSearchParamsToCourseObject
+
+```TypeScript
+import { COURSE_CONVERT_OBJECTS } from '@constants/course';
+
+export default function convertSearchParamsToCourseObject(
+  searchParams: Record<string, string | string[]>,
+): Record<string, string> {
+  return {
+    filter_conditions: JSON.stringify({
+      $and: Object.entries(searchParams)
+        .filter(([key]) => key in COURSE_CONVERT_OBJECTS)
+        .map(([key, value]) => {
+          if (Array.isArray(value)) {
+            return { $or: value.map((v) => COURSE_CONVERT_OBJECTS[key]?.(v)) };
+          }
+          return { $or: [COURSE_CONVERT_OBJECTS[key]?.(value)] };
+        }),
+    }),
+  };
+}
+```
+
+COURSE_CONVERT_OBJECTS를 mock으로 사용하여 테스트를 진행하였습니다.  
+올바른 포멧을 내보내는지 테스트하였습니다.
+
+```TypeScript
+import { COURSE_CONVERT_OBJECTS } from '@constants/course';
+import convertSearchParamsToCourseObject from '../convertSearchParamsToCourseObject';
+
+jest.mock('@constants/course', () => ({
+  COURSE_CONVERT_OBJECTS: {
+    keyword: jest.fn((value) => ({ title: `%${value}%` })),
+    price: jest.fn((value) => {
+      switch (value) {
+        case '29':
+          return { enroll_type: 0, is_free: true };
+        case '30':
+          return { enroll_type: 0, is_free: false };
+        default:
+          return undefined;
+      }
+    }),
+  },
+}));
+
+describe('convertSearchParamsToCourseObject 기능 테스트', () => {
+  it('should return empty object for empty search params', () => {
+    const searchParams = {};
+    const expected = {
+      filter_conditions: JSON.stringify({ $and: [] }),
+    };
+    const actual = convertSearchParamsToCourseObject(searchParams);
+    expect(actual).toEqual(expected);
+  });
+
+  it('should convert keyword search param', () => {
+    const searchParams = {
+      keyword: 'javascript',
+    };
+    const expected = {
+      filter_conditions: JSON.stringify({
+        $and: [{ $or: [{ title: '%javascript%' }] }],
+      }),
+    };
+    const actual = convertSearchParamsToCourseObject(searchParams);
+    expect(actual).toEqual(expected);
+    expect(COURSE_CONVERT_OBJECTS.keyword).toHaveBeenCalledWith('javascript');
+  });
+
+  it('should convert price search param (free)', () => {
+    const searchParams = {
+      price: '29',
+    };
+    const expected = {
+      filter_conditions: JSON.stringify({
+        $and: [{ $or: [{ enroll_type: 0, is_free: true }] }],
+      }),
+    };
+    const actual = convertSearchParamsToCourseObject(searchParams);
+    expect(actual).toEqual(expected);
+    expect(COURSE_CONVERT_OBJECTS.price).toHaveBeenCalledWith('29');
+  });
+
+  it('should convert price search param (paid)', () => {
+    const searchParams = {
+      price: '30',
+    };
+    const expected = {
+      filter_conditions: JSON.stringify({
+        $and: [{ $or: [{ enroll_type: 0, is_free: false }] }],
+      }),
+    };
+    const actual = convertSearchParamsToCourseObject(searchParams);
+    expect(actual).toEqual(expected);
+    expect(COURSE_CONVERT_OBJECTS.price).toHaveBeenCalledWith('30');
+  });
+
+  it('should convert multiple search params', () => {
+    const searchParams = {
+      keyword: 'javascript',
+      price: '29',
+    };
+    const expected = {
+      filter_conditions: JSON.stringify({
+        $and: [
+          { $or: [{ title: '%javascript%' }] },
+          { $or: [{ enroll_type: 0, is_free: true }] },
+        ],
+      }),
+    };
+    const actual = convertSearchParamsToCourseObject(searchParams);
+    expect(actual).toEqual(expected);
+    expect(COURSE_CONVERT_OBJECTS.keyword).toHaveBeenCalledWith('javascript');
+    expect(COURSE_CONVERT_OBJECTS.price).toHaveBeenCalledWith('30');
+  });
+
+  it('should handle unsupported search params', () => {
+    const searchParams = {
+      unknown: 'value',
+    };
+    const expected = {
+      filter_conditions: JSON.stringify({ $and: [] }),
+    };
+    const actual = convertSearchParamsToCourseObject(searchParams);
+    expect(actual).toEqual(expected);
+  });
+
+  it('should call JSON.stringify with correct argument', () => {
+    JSON.stringify = jest.fn();
+
+    const searchParams = {
+      keyword: 'javascript',
+    };
+    convertSearchParamsToCourseObject(searchParams);
+    expect(JSON.stringify).toHaveBeenCalledWith({
+      $and: [{ $or: [{ title: '%javascript%' }] }],
+    });
   });
 });
 
