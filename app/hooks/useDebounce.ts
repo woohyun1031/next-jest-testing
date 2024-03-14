@@ -1,17 +1,20 @@
 import React from 'react';
 
-export default function useDebounce(value: string, delay: number = 300) {
-  const [debouncedValue, setDebouncedValue] = React.useState(value);
+export default function useDebounce(fn: () => void, delay: number = 300) {
+  const ready = React.useRef<boolean | null>(false);
+  const isReady = React.useCallback(() => ready.current, [ready]);
 
   React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedValue(value);
+    ready.current = false;
+    const id = setTimeout(() => {
+      ready.current = true;
+      fn();
     }, delay);
-
     return () => {
-      clearTimeout(timer);
+      ready.current = null;
+      clearTimeout(id);
     };
-  }, [value, delay]);
+  }, [fn]);
 
-  return debouncedValue;
+  return isReady;
 }

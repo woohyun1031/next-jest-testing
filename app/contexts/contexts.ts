@@ -2,18 +2,21 @@ import React, { createContext } from 'react';
 
 import { IOrgCourse } from '#types/course';
 
-interface CoursesContextType {
+type TCourseObject = {
   courses: IOrgCourse[];
-  setCourses: React.Dispatch<React.SetStateAction<IOrgCourse[]>>;
-  courseCount: number;
-  setCourseCount: React.Dispatch<React.SetStateAction<number>>;
+  courseCount: number,
+}
+interface CoursesContextType {
+  courseObject: TCourseObject,
+  setCourseObject: React.Dispatch<React.SetStateAction<TCourseObject>>  
 }
 
 export const CoursesContext = createContext<CoursesContextType>({
-  courses: [],
-  setCourses: () => {},
-  courseCount: 0,
-  setCourseCount: () => {},
+  courseObject: {
+    courses: [],
+    courseCount: 0,
+  },
+  setCourseObject: () => {},  
 });
 
 export const PaginationContext = createContext<{

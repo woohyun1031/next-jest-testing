@@ -1,8 +1,14 @@
 import React from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import {
+  ReadonlyURLSearchParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from 'next/navigation';
 
 export type TOnSubmitReturn = {
   onSubmit: (key: string, values: string[] | number[]) => void;
+  searchParams?: ReadonlyURLSearchParams | null;
 };
 
 export default function useOnSubmit(): TOnSubmitReturn {
@@ -22,5 +28,5 @@ export default function useOnSubmit(): TOnSubmitReturn {
     [pathname, router, searchParams],
   );
 
-  return { onSubmit };
+  return { onSubmit, searchParams };
 }

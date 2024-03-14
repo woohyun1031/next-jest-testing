@@ -32,7 +32,7 @@ export default function Pagination({
   courseLength: number;
 }) {
   const { offset, setOffset } = React.useContext(PaginationContext);
-  const { setCourses, setCourseCount } = React.useContext(CoursesContext);
+  const { setCourseObject } = React.useContext(CoursesContext);
   const searchParams = useSearchParams();
   const currentPage = courseLength
     ? Math.floor(offset / PAGINATION.PAGES_LIMIT) + 1
@@ -52,11 +52,14 @@ export default function Pagination({
       paramsObject,
       (num - 1) * PAGINATION.PAGES_LIMIT,
     );
+
     if (response.ok) {
       const result = await response.json();
       setOffset((num - 1) * PAGINATION.PAGES_LIMIT);
-      setCourses(result.courses);
-      setCourseCount(result.course_count);
+      setCourseObject({
+        courses: result.courses,
+        courseCount: result.course_count,
+      });
       window.scrollTo(0, 0);
     }
   }

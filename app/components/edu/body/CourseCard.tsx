@@ -1,9 +1,7 @@
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { IOrgCourse } from '#types/course';
 import CardDescription from './CardDescription';
-import CardIconText from './CardIconText';
 import CardLabel from './CardLabel';
 import CardTitle from './CardTitle';
 
