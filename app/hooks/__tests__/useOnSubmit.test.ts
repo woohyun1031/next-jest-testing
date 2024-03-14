@@ -16,6 +16,10 @@ describe('useOnSubmit 기능 테스트', () => {
     (usePathname as jest.Mock).mockReturnValue('example.com');
   });
 
+  it('should be defined', () => {
+    expect(useOnSubmit).toBeDefined();
+  });
+
   it('새로운 key를 추가할 수 있다.', () => {
     (useSearchParams as jest.Mock).mockReturnValue({
       toString: () => 'price=29',
