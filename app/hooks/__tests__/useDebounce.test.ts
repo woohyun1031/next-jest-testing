@@ -17,14 +17,7 @@ describe('useDebounce 기능 테스트', () => {
     delay: number = 300,
   ): [jest.Mock, RenderHookResult<() => boolean | null, { delay: number }>] {
     const spy = jest.fn();
-    return [
-      spy,
-      renderHook(({ delay = 300 }) => useDebounce(spy, delay), {
-        initialProps: {
-          delay,
-        },
-      }),
-    ];
+    return [spy, renderHook(() => useDebounce(spy, delay))];
   }
 
   it('should call passed function after given amount of time', () => {

@@ -5,7 +5,6 @@ import Error from '@components/common/Error';
 import Form from './form';
 
 export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
 
 export default async function Page({
   searchParams,
