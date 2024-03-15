@@ -4,7 +4,7 @@ import React from 'react';
 import Chip from '@components/edu/filter/Chip';
 import useOnSubmit from '@hooks/useOnSubmit';
 import { IChip } from '#types/filter';
-import { useSearchParams } from 'next/navigation';
+import useDebounce from '@hooks/useDebounce';
 
 interface IFilterProps {
   id: string;
@@ -13,12 +13,11 @@ interface IFilterProps {
 }
 
 export default function Filter({ id: filterId, label, chips }: IFilterProps) {
-  const searchParams = useSearchParams();
+  const { onSubmit, searchParams } = useOnSubmit();
   const initChips = searchParams?.getAll(filterId) ?? [];
   const [activeChips, setActiveChips] = React.useState<string[]>([
     ...initChips,
   ]);
-  const { onSubmit } = useOnSubmit();
 
   const handleOnChange = (id: string) => {
     if (activeChips.some((i) => i === id)) {
@@ -28,9 +27,17 @@ export default function Filter({ id: filterId, label, chips }: IFilterProps) {
     }
   };
 
-  React.useEffect(() => {
-    onSubmit(filterId, activeChips);
-  }, [filterId, activeChips, onSubmit]);
+  const isReady = useDebounce(() => {
+    if (
+      activeChips.length !== initChips.length ||
+      !activeChips.every((c) => initChips.includes(c)) ||
+      !initChips.every((c) => activeChips.includes(c))
+    ) {
+      onSubmit(filterId, activeChips);
+    }
+  }, 300);
+
+  console.log(isReady);
 
   return (
     <div

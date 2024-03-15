@@ -23,4 +23,6 @@ export const ESSENTIAL_COURSE_KEYS: EssentialCourseKeys = [
   'id',
   'title',
   'short_description',
+  'enroll_type',
+  'is_free',
 ];
