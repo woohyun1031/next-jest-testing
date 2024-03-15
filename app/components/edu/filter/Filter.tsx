@@ -27,15 +27,13 @@ export default function Filter({ id: filterId, label, chips }: IFilterProps) {
     }
   };
 
-  const isReady = useDebounce(() => {
-    if (
-      activeChips.length !== initChips.length ||
+  const isReady = useDebounce(
+    () => onSubmit(filterId, activeChips),
+    300,
+    activeChips.length !== initChips.length ||
       !activeChips.every((c) => initChips.includes(c)) ||
-      !initChips.every((c) => activeChips.includes(c))
-    ) {
-      onSubmit(filterId, activeChips);
-    }
-  }, 300);
+      !initChips.every((c) => activeChips.includes(c)),
+  );
 
   console.log(isReady);
 

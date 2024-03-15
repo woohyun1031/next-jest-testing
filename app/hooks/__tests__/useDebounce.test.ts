@@ -15,9 +15,16 @@ describe('useDebounce 기능 테스트', () => {
 
   function getHook(
     delay: number = 300,
-  ): [jest.Mock, RenderHookResult<() => boolean | null, { delay: number }>] {
+    condition: boolean = true,
+  ): [
+    jest.Mock,
+    RenderHookResult<
+      () => boolean | null,
+      { delay: number; condition?: boolean }
+    >,
+  ] {
     const spy = jest.fn();
-    return [spy, renderHook(() => useDebounce(spy, delay))];
+    return [spy, renderHook(() => useDebounce(spy, delay, condition))];
   }
 
   it('should call passed function after given amount of time', () => {
@@ -47,5 +54,21 @@ describe('useDebounce 기능 테스트', () => {
     isReady = hook.result.current;
     jest.advanceTimersByTime(300);
     expect(isReady()).toBe(true);
+  });
+
+  it('isReady function should return actual state of debounce with condition', () => {
+    let [, hook] = getHook(300, false);
+    let isReady = hook.result.current;
+    jest.advanceTimersByTime(300);
+    expect(isReady()).toBe(false);
+    hook.unmount();
+    expect(isReady()).toBe(null);
+
+    [, hook] = getHook(300, true);
+    isReady = hook.result.current;
+    jest.advanceTimersByTime(300);
+    expect(isReady()).toBe(true);
+    hook.unmount();
+    expect(isReady()).toBe(null);
   });
 });

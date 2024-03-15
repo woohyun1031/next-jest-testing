@@ -12,13 +12,12 @@ export default function SearchForms() {
     () => `${searchParams?.get('keyword') ?? ''}`,
     [searchParams],
   );
-
   const [value, setValue] = React.useState(`${init}`);
-  const isReady = useDebounce(() => {
-    if (init !== value) {
-      onSubmit('keyword', [value]);
-    }
-  }, 300);
+  const isReady = useDebounce(
+    () => onSubmit('keyword', [value]),
+    300,
+    init !== value,
+  );
 
   console.log(isReady);
 

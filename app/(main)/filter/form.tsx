@@ -4,9 +4,6 @@ import React, { Fragment, Suspense } from 'react';
 import FilterForm from '@forms/edu/FilterForm';
 import { IOrgCourseListResponses } from '#types/course';
 import { CoursesContext } from '@contexts/contexts';
-import CourseCard from '@components/edu/body/CourseCard';
-import Pagination from '@components/edu/pagination/Pagination';
-import SectionWraper from '@components/edu/SectionWraper';
 import BodyForm from '@forms/edu/BodyForm';
 
 export default function Form(props: IOrgCourseListResponses) {
