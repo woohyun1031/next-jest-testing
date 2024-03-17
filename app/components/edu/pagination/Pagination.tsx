@@ -9,7 +9,7 @@ import React from 'react';
 import Arrow from './Arrow';
 import PageNum from './PageNum';
 
-const getPageCount = (endPage: number, currentPage: number) => {
+export const getPageCount = (endPage: number, currentPage: number) => {
   if (!currentPage) return [];
   const slicePoint = Math.floor(PAGINATION.SHOW / 2);
   const startShow = Math.max(currentPage - slicePoint, 1);

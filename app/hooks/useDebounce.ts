@@ -1,7 +1,5 @@
 import React from 'react';
 
-// options.condition == false | true\
-
 export default function useDebounce(
   fn: () => void,
   delay: number,
