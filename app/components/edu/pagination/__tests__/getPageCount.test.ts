@@ -1,5 +1,5 @@
-import { getPageCount } from '../Pagination';
 import * as constants from '@constants/pagination';
+import { getPageCount } from '../Pagination';
 
 jest.mock('@constants/pagination');
 

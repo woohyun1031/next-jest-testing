@@ -3,7 +3,8 @@
 import getOrgCourseList from '@apis/getOrgCourseList';
 import { COURSE_CONVERT_OBJECTS } from '@constants/course';
 import { PAGINATION } from '@constants/pagination';
-import { CoursesContext, PaginationContext } from '@contexts/contexts';
+import { CourseDispatch } from '@contexts/courseContext';
+import { PaginationDispatch } from '@contexts/paginationContext';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import Arrow from './Arrow';
@@ -31,11 +32,12 @@ export default function Pagination({
   total: number;
   courseLength: number;
 }) {
-  const { offset, setOffset } = React.useContext(PaginationContext);
-  const { setCourseObject } = React.useContext(CoursesContext);
+  const { paginationState, paginationDispatch } =
+    React.useContext(PaginationDispatch);
+  const { courseDispatch } = React.useContext(CourseDispatch);
   const searchParams = useSearchParams();
   const currentPage = courseLength
-    ? Math.floor(offset / PAGINATION.PAGES_LIMIT) + 1
+    ? Math.floor(paginationState.offsetCnt / PAGINATION.PAGES_LIMIT) + 1
     : 0;
   const endPage = Math.ceil(total / PAGINATION.PAGES_LIMIT);
   const pages = getPageCount(endPage, currentPage);
@@ -55,10 +57,16 @@ export default function Pagination({
 
     if (response.ok) {
       const result = await response.json();
-      setOffset((num - 1) * PAGINATION.PAGES_LIMIT);
-      setCourseObject({
-        courses: result.courses,
-        courseCount: result.course_count,
+      paginationDispatch({
+        type: 'update',
+        offsetCnt: (num - 1) * PAGINATION.PAGES_LIMIT,
+      });
+      courseDispatch({
+        type: 'update',
+        courseGroup: {
+          courses: result.courses,
+          courseCount: result.course_count,
+        },
       });
       window.scrollTo(0, 0);
     }

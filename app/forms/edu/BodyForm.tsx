@@ -5,10 +5,10 @@ import CourseCard from '@components/edu/body/CourseCard';
 import Pagination from '@components/edu/pagination/Pagination';
 import SectionWraper from '@components/edu/SectionWraper';
 import Image from 'next/image';
-import { CoursesContext } from '@contexts/contexts';
+import { CourseDispatch } from '@contexts/courseContext';
 
 export default function BodyForm() {
-  const { courseObject } = React.useContext(CoursesContext);
+  const { courseState: courseObject } = React.useContext(CourseDispatch);
 
   if (!courseObject.courseCount) {
     return (
