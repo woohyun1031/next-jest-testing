@@ -1,16 +1,17 @@
 'use client';
 
 import React, { Fragment, Suspense } from 'react';
-import FilterForm from '@forms/edu/FilterForm';
+import SearchForm from '@forms/edu/SearchForm';
 import { IOrgCourseListResponses } from '#types/course';
 import BodyForm from '@forms/edu/BodyForm';
-import { useSearchParams } from 'next/navigation';
 import { CourseDispatch, courseReducer } from '@contexts/courseContext';
 import {
   PaginationDispatch,
   paginationInitialState,
   paginationReducer,
 } from '@contexts/paginationContext';
+import { useSearchParams } from 'next/navigation';
+import FilterForm from '@forms/edu/FilterForm';
 
 export default function Form(props: IOrgCourseListResponses) {
   const searchParams = useSearchParams();
@@ -56,6 +57,9 @@ export default function Form(props: IOrgCourseListResponses) {
 
   return (
     <Fragment>
+      <Suspense>
+        <SearchForm />
+      </Suspense>
       <Suspense>
         <FilterForm />
       </Suspense>

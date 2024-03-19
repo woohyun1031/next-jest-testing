@@ -36,10 +36,12 @@ export default function Form(props: IOrgCourseListResponses) {
   );
 
   React.useEffect(() => {
-    paginationDispatch({
-      type: 'update',
-      offsetCnt: 0,
-    });
+    if (paginationState.offsetCnt !== 0) {
+      paginationDispatch({
+        type: 'update',
+        offsetCnt: 0,
+      });
+    }
   }, [searchParams]);
 
   React.useEffect(() => {

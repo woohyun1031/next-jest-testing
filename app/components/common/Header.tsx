@@ -11,13 +11,14 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 flex h-16 w-full justify-center bg-white px-6 py-3">
       <div className="mx-2 flex w-full flex-wrap items-center justify-start">
-        <div
+        <Link
+          href="/edu"
           className={`relative mr-6 flex h-full flex-shrink-0 cursor-pointer items-center ${
             pathNames.includes('edu') ? 'underline underline-offset-4' : ''
           }`}
         >
           Next-Jest-Testing
-        </div>
+        </Link>
 
         <Link
           href="/search"
