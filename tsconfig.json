@@ -3,7 +3,7 @@
     "target": "es5",
     "baseUrl": ".",
     "paths": {
-      "@apis/*": ["app/apis/*"],
+      "@api/*": ["app/api/*"],
       "@components/*": ["app/components/*"],
       "@constants/*": ["app/constants/*"],
       "@forms/*": ["app/forms/*"],
@@ -42,7 +42,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "jest.config.ts",
-    "jest.setup.ts"
+    "jest.setup.ts",
+    "app/(main)/api/course"
   ],
   "exclude": ["node_modules"]
 }

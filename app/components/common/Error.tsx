@@ -4,7 +4,7 @@ import React, { Fragment } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-export default function Error({ error }: { error: { message: string } }) {
+export default function Error({ error }: { error: string }) {
   const router = useRouter();
   return (
     <Fragment>
@@ -18,7 +18,7 @@ export default function Error({ error }: { error: { message: string } }) {
       </div>
       <div className="my-10 flex flex-col items-center">
         <div className="flex justify-center">
-          {error?.message ?? '페이지를 찾을 수 없습니다!'}
+          {error ?? '페이지를 찾을 수 없습니다!'}
         </div>
         <button
           type="button"

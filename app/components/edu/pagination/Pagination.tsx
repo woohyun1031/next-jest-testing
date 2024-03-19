@@ -1,10 +1,10 @@
 'use client';
 
-import getOrgCourseList from '@apis/getOrgCourseList';
 import { COURSE_CONVERT_OBJECTS } from '@constants/course';
 import { PAGINATION } from '@constants/pagination';
 import { CourseDispatch } from '@contexts/courseContext';
 import { PaginationDispatch } from '@contexts/paginationContext';
+import getOrgCourseList from '@api/apis';
 import { useSearchParams } from 'next/navigation';
 import React from 'react';
 import Arrow from './Arrow';
