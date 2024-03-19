@@ -14,8 +14,7 @@ export default async function getOrgCourseList(
   });
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_URL}/api/getOrgCourseList?${queryString}`,
-    // { next: { revalidate: 0 } },
+    `${process.env.NEXT_PUBLIC_URL}/api/course?${queryString}`,
   );
 
   return response;
