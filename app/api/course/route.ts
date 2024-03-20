@@ -16,18 +16,17 @@ export async function GET({ nextUrl }: NextRequest) {
     const responseJSON = (await response.json()) as IEliceResponse;
 
     if (responseJSON?._result?.status === 'fail') {
-      const errorJSON = responseJSON as IErrorResponses;
-      throw new Error(errorJSON.fail_message);
+      throw new Error((responseJSON as IErrorResponses).fail_message);
     }
-    const successJSON = responseJSON as IOrgCourseListResponses;
-
     const result = {
-      course_count: successJSON?.course_count,
-      courses: successJSON?.courses?.map((course) => {
-        return ESSENTIAL_COURSE_KEYS.reduce((acc, cur) => {
-          return { ...acc, [cur]: course[cur] };
-        }, {});
-      }),
+      course_count: (responseJSON as IOrgCourseListResponses)?.course_count,
+      courses: (responseJSON as IOrgCourseListResponses)?.courses?.map(
+        (course) => {
+          return ESSENTIAL_COURSE_KEYS.reduce((acc, cur) => {
+            return { ...acc, [cur]: course[cur] };
+          }, {});
+        },
+      ),
     };
     return NextResponse.json(result);
   } catch (error: any) {
